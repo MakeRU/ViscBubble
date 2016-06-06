@@ -37,7 +37,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 
 	eps = rho0*(Cp_i-Cp_f) / Rho_g;
-	if (eps > 2.0) { D_eff = 12.0*De*eps*eps / Pi; }
+	if (eps > 10.0) { D_eff = 12.0*De*eps*eps / Pi; }
 	else { D_eff = 2.0*De*eps; };
 
 	Im = 250;
@@ -67,7 +67,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	fprintf(out_file, "# Cp_i = %10.8lf \n", Cp_i);
 	fprintf(out_file, "# Cp_f = %10.8lf \n", Cp_f);
 	fprintf(out_file, "# eps = %10.8lf \n", eps);
-	fprintf(out_file, "# D_eff = %10.8lf \n", D_eff);
+	fprintf(out_file, "# D_eff = %e \n", D_eff);
 	fprintf(out_file, "# Exp = %10.8lf \n", dP/(4.0*Nu));
 
 	Cp_file = fopen("Cp.dat", "wt");
