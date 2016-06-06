@@ -20,20 +20,25 @@ int _tmain(int argc, _TCHAR* argv[])
 	tau = 1.0e-6;
 	T_out = Tm / 1000.0;
 
-	P_i = 1500.0*p0;
-	P_f = 700.0*p0;
+	P_i = 700.0*p0;
+	P_f = 500.0*p0;
 	P = P_i;
 	dP = P_i - P_f;
 	Rb = 2.0*sigma / (dP);
 	Pg = P_i;
 	Mg = 4.0*Pi * Pg * Rb * Rb * Rb * MH2O / (3.0* Rg * T);
+	Rho_g = P_f * MH2O / (Rg * T);
+
 	Nu_0 = 1.0e4;
 
 	Cp_i = Kh*sqrt(P_i);
 	Cp_f = Kh*sqrt(P_f);
 	Cp = Kh*sqrt(Pg);
 
-	
+
+	eps = rho0*(Cp_i-Cp_f) / Rho_g;
+	if (eps > 2.0) { D_eff = 12.0*De*eps*eps / Pi; }
+	else { D_eff = 2.0*De*eps; };
 
 	Im = 250;
 	dr = 1.0e-9;
@@ -56,7 +61,15 @@ int _tmain(int argc, _TCHAR* argv[])
 	
 	RRb = (Pg - P)*Rb / (4.0*Nu);
 
-	out_file = fopen("ViscBubble.dat", "wt");	
+	out_file = fopen("ViscBubble.dat", "wt");
+	fprintf(out_file, "# P_i = %10.8lf \n", P_i / p0);
+	fprintf(out_file, "# P_f = %10.8lf \n", P_f / p0);
+	fprintf(out_file, "# Cp_i = %10.8lf \n", Cp_i);
+	fprintf(out_file, "# Cp_f = %10.8lf \n", Cp_f);
+	fprintf(out_file, "# eps = %10.8lf \n", eps);
+	fprintf(out_file, "# D_eff = %10.8lf \n", D_eff);
+	fprintf(out_file, "# Exp = %10.8lf \n", dP/(4.0*Nu));
+
 	Cp_file = fopen("Cp.dat", "wt");
 	out_num = 0;
 

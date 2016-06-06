@@ -17,13 +17,13 @@ const double Na = 6.0e23; // Число Авогадро
 
 const double Tm_0 = 1.0e6;
 
-double P, P_i, P_f, Pg, dP;
+double P, P_i, P_f, Pg, dP, Rho_g;
 double tau;
 double Tm, T_i, T_out;;
 double Rb, RRb, Mg;
 double Nu, Nu_0;
 double Cp_i, Cp_f, Cp, dCp, Cp_int;
-double E;
+double E, eps, D_eff;
 
 double *CpR, *NuR, *r;
 int i, Im, l, out_num;
