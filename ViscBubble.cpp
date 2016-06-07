@@ -10,18 +10,46 @@
 
 #include "Data.h"
 
+double D_dihot(double eps)
+{
+	double D_min, D_max, D_int, D_tmp, dXi, Xi, Eq_tmp;
+	int N, i;
+
+	N = 10000000;
+	D_min = 0.0;
+	D_max = 1.0e10;
+	dXi = 1.0e-4;
+
+	D_tmp = (D_max+D_min) / 2.0;
+	D_tmp = D_max;
+	do{
+		D_int = 0.0;
+		for (i = 0; i < N; i++)
+		{
+			Xi = 1.0 + i*dXi;
+			D_int = D_int + (exp(-(Xi*Xi / 2.0 + 1.0 / Xi - 3.0 / 2.0)*D_tmp / 2.0) / (Xi*Xi))*dXi;
+		}
+		Eq_tmp = D_tmp / 2.0*D_int - eps;
+		if (Eq_tmp < 0.0) { D_min = D_tmp; }
+		else { D_max = D_tmp; };
+		D_tmp = (D_max + D_min) / 2.0;
+	} while (D_max - D_min > 1.0e-10);
+
+	return D_tmp;
+}
+
 int _tmain(int argc, _TCHAR* argv[])
 {
 	Nu_flag = 1;
 	Cp_flag = 1;
 
-	Tm = 100.0;
+	Tm = 1000.0;
 	T_i = 0.0;
 	tau = 1.0e-6;
-	T_out = Tm / 1000.0;
+	T_out = Tm / 10000.0;
 
 	P_i = 700.0*p0;
-	P_f = 500.0*p0;
+	P_f = 120.0*p0;
 	P = P_i;
 	dP = P_i - P_f;
 	Rb = 2.0*sigma / (dP);
@@ -39,6 +67,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	eps = rho0*(Cp_i-Cp_f) / Rho_g;
 	if (eps > 10.0) { D_eff = 12.0*De*eps*eps / Pi; }
 	else { D_eff = 2.0*De*eps; };
+	
+	D_eff = De*D_dihot(eps);
+
 
 	Im = 250;
 	dr = 1.0e-9;
@@ -68,6 +99,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	fprintf(out_file, "# Cp_f = %10.8lf \n", Cp_f);
 	fprintf(out_file, "# eps = %10.8lf \n", eps);
 	fprintf(out_file, "# D_eff = %e \n", D_eff);
+	fprintf(out_file, "# D_min = %e \n", 2.0*De*eps);
+	fprintf(out_file, "# D_max = %e \n", 12.0*De*eps*eps / Pi);
 	fprintf(out_file, "# Exp = %10.8lf \n", dP/(4.0*Nu));
 
 	Cp_file = fopen("Cp.dat", "wt");
