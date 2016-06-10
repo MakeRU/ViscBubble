@@ -40,16 +40,16 @@ double D_dihot(double eps)
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	Nu_flag = 1;
+	Nu_flag = 0;
 	Cp_flag = 1;
 
-	Tm = 1000.0;
+	Tm = 10000.0;
 	T_i = 0.0;
-	tau = 1.0e-6;
-	T_out = Tm / 10000.0;
+	tau = 1.0e-5;
+	T_out = 10.0 * tau;
 
-	P_i = 700.0*p0;
-	P_f = 120.0*p0;
+	P_i = 1500.0*p0;
+	P_f = 150.0*p0;
 	P = P_i;
 	dP = P_i - P_f;
 	Rb = 2.0*sigma / (dP);
@@ -65,8 +65,8 @@ int _tmain(int argc, _TCHAR* argv[])
 
 
 	eps = rho0*(Cp_i-Cp_f) / Rho_g;
-	if (eps > 10.0) { D_eff = 12.0*De*eps*eps / Pi; }
-	else { D_eff = 2.0*De*eps; };
+	if (eps > 10.0) { D_eff = 12.0*De*eps*eps / Pi;}
+	else { D_eff = 2.0*De*eps;};
 	
 	D_eff = De*D_dihot(eps);
 
