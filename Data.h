@@ -19,14 +19,14 @@ const double Tm_0 = 1.0e6;
 
 double P, P_i, P_f, Pg, dP, Rho_g;
 double tau;
-double Tm, T_i, T_out;;
+double Tm, T_i, T_out, T_out_r;
 double Rb, RRb, Mg;
 double Nu, Nu_0;
 double Cp_i, Cp_f, Cp, dCp, Cp_int;
 double E, eps, D_eff;
 
 double *CpR, *NuR, *r;
-int i, Im, l, out_num;
+int i, Im, l, out_num, out_num_r;
 double dr, r_tmp;
 
 int Nu_flag, Cp_flag;

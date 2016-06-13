@@ -40,13 +40,14 @@ double D_dihot(double eps)
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	Nu_flag = 0;
+	Nu_flag = 1;
 	Cp_flag = 1;
 
 	Tm = 10000.0;
 	T_i = 0.0;
 	tau = 1.0e-5;
 	T_out = 10.0 * tau;
+	T_out_r = 10.0;
 
 	P_i = 1500.0*p0;
 	P_f = 150.0*p0;
@@ -105,27 +106,31 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	Cp_file = fopen("Cp.dat", "wt");
 	out_num = 0;
+	out_num_r = 0;
 
 	do {
 		printf("Time %3.8lf s \n", T_i);
 
 		if (T_i > out_num * T_out) {
-
 			fprintf(out_file, "%10.8lf \t %10.8lf \t %10.8lf \t %10.8lf \t %e \t %10.8lf \n",
 				T_i, P / p0, Pg / p0, Rb*1.0e6, Mg, Nu);
-
-			if (out_num < 100000) { sprintf(out_name, "Data/%d.dat", out_num); };
-			if (out_num < 10000) { sprintf(out_name, "Data/0%d.dat", out_num); };
-			if (out_num < 1000) { sprintf(out_name, "Data/00%d.dat", out_num); };
-			if (out_num < 100) { sprintf(out_name, "Data/000%d.dat", out_num); };
-			if (out_num < 10) { sprintf(out_name, "Data/0000%d.dat", out_num); };
+			out_num = out_num + 1;
+		}
+		
+		if (T_i > out_num_r * T_out_r) {
+			if (out_num_r < 1000000) { sprintf(out_name, "Data/%d.dat", out_num_r); };
+			if (out_num_r < 100000) { sprintf(out_name, "Data/0%d.dat", out_num_r); };
+			if (out_num_r < 10000) { sprintf(out_name, "Data/00%d.dat", out_num_r); };
+			if (out_num_r < 1000) { sprintf(out_name, "Data/000%d.dat", out_num_r); };
+			if (out_num_r < 100) { sprintf(out_name, "Data/0000%d.dat", out_num_r); };
+			if (out_num_r < 10) { sprintf(out_name, "Data/00000%d.dat", out_num_r); };
 			cut_file = fopen(out_name, "wt");
 			for (i = 0; i <= Im; i++){
 				fprintf(cut_file, "%10.8lf \t %10.8lf \t %10.8lf \t %10.8lf \n", r[i] * 1.0e6, r[i] / r[0], CpR[i], NuR[i]);
 				fprintf(Cp_file, "%10.8lf \t %10.8lf \t %10.8lf \t %10.8lf \t %10.8lf \n", T_i, r[i] * 1.0e6, r[i]/r[0], CpR[i], NuR[i]);
 			}
 			fclose(cut_file);
-			out_num = out_num + 1;
+			out_num_r = out_num_r + 1;
 		}
 		dr = 49.0*Rb / Im;
 		for (i = 0; i <= Im; i++){
