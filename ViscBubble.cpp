@@ -43,16 +43,22 @@ int _tmain(int argc, _TCHAR* argv[])
 	Nu_flag = 1;
 	Cp_flag = 1;
 
-	Tm = 10000.0;
+	Tm = 1000.0;
 	T_i = 0.0;
-	tau = 1.0e-5;
-	T_out = 10.0 * tau;
+	tau = 1.0e-7;
+	T_out = 1.0;
 	T_out_r = 10.0;
 
-	P_i = 1500.0*p0;
-	P_f = 150.0*p0;
+	T_010 = Tm;
+	T_005 = Tm;
+	T_001 = Tm;
+
+
+	P_i = 700.0*p0;
+	P_f = 650.0*p0;
 	P = P_i;
 	dP = P_i - P_f;
+	beta = dP / P_i;
 	Rb = 2.0*sigma / (dP);
 	Pg = P_i;
 	Mg = 4.0*Pi * Pg * Rb * Rb * Rb * MH2O / (3.0* Rg * T);
@@ -107,6 +113,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	Cp_file = fopen("Cp.dat", "wt");
 	out_num = 0;
 	out_num_r = 0;
+
+	T_file = fopen("T.dat", "wt");
 
 	do {
 		printf("Time %3.8lf s \n", T_i);
@@ -182,13 +190,20 @@ int _tmain(int argc, _TCHAR* argv[])
 		Pg = Mg * 3.0* Rg * T / (4.0*Pi *  Rb * Rb * Rb * MH2O);
 		Cp = Kh*sqrt(Pg);
 
-	
+		if (Tm > 10.0) {tau = 1.0e-4; };
+
+		if ((Pg < P_f + 0.1*(P_i - P_f)) && (T_010 > T_i)) { T_010 = T_i; };
+		if ((Pg < P_f + 0.05*(P_i - P_f)) && (T_005 > T_i)) { T_005 = T_i; };		
+		if ((Pg < P_f + 0.01*(P_i - P_f)) && (T_001 > T_i)) { T_001 = T_i; };
 
 	} while (T_i < Tm+tau);
+
+	fprintf(T_file, "%10.8lf \t %10.8lf \t %10.8lf \t %10.8lf \t %10.8lf \t %10.8lf \t %10.8lf \n", P_i/p0, P_f/p0, eps, beta, T_010, T_005, T_001);
 
 
 	fclose(out_file);	
 	fclose(Cp_file);
+	fclose(T_file);
 	return 0;
 }
 
