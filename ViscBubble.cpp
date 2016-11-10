@@ -42,8 +42,9 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 	Nu_flag = 1;
 	Cp_flag = 1;
+	Flag_T = true;
 
-	Tm = 1000.0;
+	Tm = 10000.0;
 	T_i = 0.0;
 	tau = 1.0e-7;
 	T_out = 1.0;
@@ -54,8 +55,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	T_001 = Tm;
 
 
-	P_i = 700.0*p0;
-	P_f = 650.0*p0;
+	P_i = 400.0*p0;
+	P_f = 350.0*p0;
 	P = P_i;
 	dP = P_i - P_f;
 	beta = dP / P_i;
@@ -194,9 +195,9 @@ int _tmain(int argc, _TCHAR* argv[])
 
 		if ((Pg < P_f + 0.1*(P_i - P_f)) && (T_010 > T_i)) { T_010 = T_i; };
 		if ((Pg < P_f + 0.05*(P_i - P_f)) && (T_005 > T_i)) { T_005 = T_i; };		
-		if ((Pg < P_f + 0.01*(P_i - P_f)) && (T_001 > T_i)) { T_001 = T_i; };
+		if ((Pg < P_f + 0.01*(P_i - P_f)) && (T_001 > T_i)) { T_001 = T_i; Flag_T = false; };
 
-	} while (T_i < Tm+tau);
+	} while ((T_i < Tm+tau) && Flag_T);
 
 	fprintf(T_file, "%10.8lf \t %10.8lf \t %10.8lf \t %10.8lf \t %10.8lf \t %10.8lf \t %10.8lf \n", P_i/p0, P_f/p0, eps, beta, T_010, T_005, T_001);
 
